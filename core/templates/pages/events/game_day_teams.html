@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'pickup_groups' %}">Groups</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'group_page' event.group.id %}">{{ event.group.name }}</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'event_page' event.group.id event.id %}">Event</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Game Day Teams</li>
+    </ol>
+  </nav>
+
+  <h1>Game Day Teams for {{ event.name }}</h1>
+  <h5>Attendees List</h5>
+  <ol>
+    {% for person in attendees %}
+      <li>{{ person.user.first_name }} {{ person.user.last_name }}</li>
+    {% endfor %}
+  </ol>
+
+  {% for game_setup in game_setups %}
+    <h2>Game {{ game_setup.game_number }}</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Team A</h3>
+        <ul>
+          {% for player in game_setup.team_a %}
+            <li>{{ player.user.username }} (Score: {{ player.score }})</li>
+          {% empty %}
+            <li>No players assigned.</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h3>Team B</h3>
+        <ul>
+          {% for player in game_setup.team_b %}
+            <li>{{ player.user.username }} (Score: {{ player.score }})</li>
+          {% empty %}
+            <li>No players assigned.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    {% if game_setup.sitting_out %}
+      <div class="alert alert-info mt-3">
+        <strong>Sitting Out Game {{ game_setup.game_number }}:</strong>
+        {% for player in game_setup.sitting_out %}
+          {{ player.username }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <hr />
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+  <style>
+    .public-profile-header {
+      background-color: #f8f9fa; /* Light grey background */
+      padding: 2rem 0;
+      text-align: center;
+    }
+    .public-profile-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+      margin-bottom: 1rem;
+    }
+    .profile-section {
+      margin-top: 2rem;
+    }
+    .group-list-item {
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid #dee2e6;
+      border-radius: 0.25rem;
+    }
+  </style>
+  <header class="public-profile-header">
+    <div class="container">
+      {% comment %} <img src="https://via.placeholder.com/120x120" alt="Profile Picture" class="public-profile-image" /> {% endcomment %}
+      <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+      <p class="lead">
+        {% comment %} <i class="bi bi-geo-alt-fill me-1"></i> From: {{ user.city }}, {{ user.state }} | <i class="bi bi-envelope-fill me-1"></i> {% endcomment %}
+      </p>
+      {% comment %} <button class="btn btn-primary">Send Message</button> {% endcomment %}
+    </div>
+  </header>
+
+  <main class="container py-4">
+    <section class="profile-section" id="about-me">
+      <h2>About Me</h2>
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">Hi, I'm John! I love playing pickup soccer and basketball in the city. Always up for a good game and meeting new people who share the same passion for sports. Looking forward to connecting and playing with you!</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section" id="groups-section">
+      <h2>Groups</h2>
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-unstyled">
+            {% if user.public_user_groups_joined %}
+              {% for membership in user.public_user_groups_joined %}
+                <li class="group-list-item d-flex align-items-center justify-content-between">
+                  <div>
+                    <h6 class="mb-0"><a href="{% url 'group_page' membership.group.id %}">{{ membership.group.name }}</a></h6>
+                    <small class="text-muted group-info"><i class="bi bi-activity me-1"></i> {{ membership.group.sport }} | <i class="bi bi-geo-alt-fill me-1"></i> {{ group.city }}</small>
+                  </div>
+                  <span class="badge bg-info rounded-pill">Member</span>
+                </li>
+              {% endfor %}
+            {% else %}
+              <p class="text-muted">No groups joined yet.</p>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer bg-dark text-light py-3">
+    <div class="container text-center">
+      <p>&copy; 2023 PickupGames.com. All rights reserved.</p>
+      <p class="mb-0">
+        <a href="/" class="text-light">Home</a> | <a href="/about" class="text-light">About Us</a> | <a href="/community" class="text-light">Community</a> | <a href="#" class="text-light">Terms of Service</a> | <a href="#" class="text-light">Privacy Policy</a>
+      </p>
+    </div>
+  </footer>
+{% endblock %}

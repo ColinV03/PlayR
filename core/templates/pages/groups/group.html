@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div>
+    <style>
+      .group-header {
+        background-color: #f0f2f5; /* Light background for header */
+        padding: 2rem 0;
+        text-align: center;
+      }
+      .group-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 20%; /* Slightly rounded icon */
+        object-fit: cover;
+        margin-bottom: 1rem;
+      }
+      .section-heading {
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      .player-list-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #dee2e6;
+      }
+      .player-list-item:last-child {
+        border-bottom: none; /* Remove border from last item */
+      }
+      .game-card {
+        margin-bottom: 1rem;
+      }
+      .game-status-badge {
+        margin-left: 0.5rem;
+      }
+    </style>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'pickup_groups' %}">Groups</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ group.name }}</li>
+      </ol>
+    </nav>
+
+    <header class="group-header">
+      <div class="container">
+        <img src="https://via.placeholder.com/100x100" alt="Group Icon" class="group-icon" />
+        <h1 class="display-4 fw-bold">{{ group.name }}</h1>
+        <p class="lead">Location: {{ group.city }} {{ group.state }} | Sport: {{ group.sport }} | Level: {{ group.competetive_level }}</p>
+        {% if not is_member %}
+          <button class="btn btn-primary btn-lg">Request to Join Group</button>
+        {% endif %}
+      </div>
+    </header>
+
+    <main class="container py-4">
+      <section id="players-section">
+        <div class="row d-flex justify-content-between align-items-center">
+          <div class="col">
+            <h2 class="section-heading">Players in This Group <span class="badge bg-secondary">{{ group.get_members.count }}</span></h2>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              {% if organizer %}
+                <a href="#" class="btn btn-sm btn-outline-primary float-end">Invite Players</a>
+              {% endif %}
+            </div>
+            <div class="row">
+              {% if is_member %}
+                <a href="#" class="btn btn-sm btn-outline-danger float-end">Leave Group</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <ul class="list-unstyled">
+              {% for member in group.get_members %}
+                <li class="player-list-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-0">{{ member.user.first_name }} {{ member.user.last_name }}</h6>
+                    <small class="text-muted">Member Since: {{ member.approved_date|date:'M d, Y' }}</small>
+                  </div>
+                  <a href="{% url 'public_profile' member.user.username %}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                </li>
+              {% endfor %}
+              <li class="player-list-item text-center">
+                <a href="#">View All Members</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="game-schedule-section" class="section-heading">
+        <div class="col">
+          <div class="row d-flex justify-content-between align-items-center">
+            <div class="col">
+              <h2>Upcoming Game Schedule</h2>
+            </div>
+            <div class="col text-end">
+              <a href="{% url 'create_event_day' group.id %}" class="btn btn-primary">Create Event</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          {% if group.get_scheduled_events %}
+            {% for event in group.get_scheduled_events %}
+              <div class="col">
+                <div class="game-card card">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-event me-1"></i> Date: {{ event.date }}
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-clock me-1"></i> Description: {{ event.description }}
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Location: {{ event.location }}
+                    </p>
+
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Time: {{ event.start_time|time }} - {{ event.end_time|time }}
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1">{{ event.get_rsvp_count }} Going / Max Participants:{{ event.max_participants }}</i>
+                    </p>
+                    {% if event.status == 'Pending' %}
+                      <span class="badge bg-warning text-dark game-status-badge">Pending</span>
+                    {% elif event.status == 'Scheduled' %}
+                      <span class="badge bg-success game-status-badge">Scheduled</span>
+                    {% elif event.status == 'Completed' %}
+                      <span class="badge bg-secondary game-status-badge">Completed</span>
+                    {% else %}
+                      <span class="badge bg-danger game-status-badge">Cancelled</span>
+                    {% endif %}
+
+                    {% if event.is_joinable %}
+                      <a href="{% url 'event_page' event.group.id event.id %}" class="btn btn-sm btn-outline-secondary ms-2">Join</a>
+                    {% endif %}
+                    <a href="{% url 'event_page' event.group.id event.id %}" class="btn btn-sm btn-outline-secondary ms-2">Game Details</a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </section>
+
+      <section id="previous-results-section" class="section-heading">
+        <h2>Previous Events</h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          {% if group.previous_scheduled_events %}
+            {% for event in group.previous_scheduled_events %}
+              <div class="col">
+                <div class="game-card card">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-event me-1"></i> Date: {{ event.date }}
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-clock me-1"></i> Description: {{ event.description }}
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Location: {{ event.location }}
+                    </p>
+
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Time: {{ event.start_time|time }} - {{ event.end_time|time }}
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1">Max Participants: {{ event.max_participants }}</i>
+                    </p>
+                    {% if event.status == 'Pending' %}
+                      <span class="badge bg-warning text-dark game-status-badge">Pending</span>
+                    {% elif event.status == 'Scheduled' %}
+                      <span class="badge bg-success game-status-badge">Scheduled</span>
+                    {% elif event.status == 'Completed' %}
+                      <span class="badge bg-secondary game-status-badge">Completed</span>
+                    {% else %}
+                      <span class="badge bg-danger game-status-badge">Cancelled</span>
+                    {% endif %}
+                    <a href="#" class="btn btn-sm btn-outline-secondary ms-2">Game Details</a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+
+            {% comment %} <div class="col-12 text-center">
+              <a href="#">View All Game Results</a>
+            </div> {% endcomment %}
+          {% else %}
+            <div class="col-12 text-center">
+              <p>No previous events found.</p>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer bg-dark text-light py-3">
+      <div class="container text-center">
+        <p>&copy; 2023 PickupGames.com. All rights reserved.</p>
+        <p class="mb-0">
+          <a href="/" class="text-light">Home</a> | <a href="/about" class="text-light">About Us</a> | <a href="/community" class="text-light">Community</a> | <a href="#" class="text-light">Terms of Service</a> | <a href="#" class="text-light">Privacy Policy</a>
+        </p>
+      </div>
+    </footer>
+  </div>
+{% endblock %}

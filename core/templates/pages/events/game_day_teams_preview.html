@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load number_formats %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'pickup_groups' %}">Groups</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'group_page' event.group.id %}">{{ event.group.name }}</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'event_page' event.group.id event.id %}">Event</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Game Day Teams</li>
+    </ol>
+  </nav>
+  <h1>Preview Game Day Teams for {{ event.name }}</h1>
+  <div class="container">
+    <p>Here are the teams for the upcoming game day. Please review the teams and confirm them below.</p>
+    <div class="container">
+      {% comment %}Event card with details regarding suggested game length, max participants, and team sizes{% endcomment %}
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Event Details</h2>
+          <p class="card-text">
+            <strong>Suggested Play Time:</strong> {{ event.game_duration|format_decimal_minutes }} mins<br />
+            <strong>Max Participants:</strong> {{ event.max_participants }}<br />
+            <strong>Team Size:</strong> {{ event.team_size }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if error_message %}
+    <div class="alert alert-danger">{{ error_message }}</div>
+  {% else %}
+    {% for game_setup in game_setups %}
+      <h2>Game {{ game_setup.game_number }} (Est. Playtime: {{ game_setup.estimated_playtime_minutes|format_decimal_minutes }})</h2>
+
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Team A</h3>
+          <ul>
+            {% for player in game_setup.team_a %}
+              <li>{{ player.user.first_name }} {{ player.user.last_name }}</li> {# Assuming you'll fetch and display UserProfile details from ID #}
+            {% empty %}
+              <li>No players assigned.</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h3>Team B</h3>
+          <ul>
+            {% for player in game_setup.team_b %}
+              <li>{{ player.user.first_name }} {{ player.user.last_name }}</li> {# Assuming you'll fetch and display UserProfile details from ID #}
+            {% empty %}
+              <li>No players assigned.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      {% if game_setup.sitting_out %}
+        <div class="alert alert-info mt-3">
+          <strong>Sitting Out Game {{ game_setup.game_number }}:</strong>
+          {% for player in game_setup.sitting_out %}
+            {{ player.user.first_name }} {{ player.user.last_name }} {% if not forloop.last %}, {% endif %} {# Assuming you'll fetch and display UserProfile details from ID #}
+          {% endfor %}
+        </div>
+      {% endif %}
+      <hr />
+    {% endfor %}
+
+    <div class="mt-4">
+      <form method="post" action="{% url 'confirm_game_day_teams_view' group_id=event.group.id event_id=event.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success btn-lg">Confirm Teams</button>
+      </form>
+      {% comment %} <a href="{% url '' event_id=event.id %}" class="btn btn-secondary btn-lg ms-2">Regenerate Teams</a> {# Link to regenerate #} {% endcomment %}
+    </div>
+  {% endif %}
+{% endblock %}

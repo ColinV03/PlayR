@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Unauthorized</h1>
+        <p>You are not authorized to view this page.</p>
+      </div>
+      <div class="col-md-12">
+        <a href="{% url 'home' %}" class="btn btn-primary">Home</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

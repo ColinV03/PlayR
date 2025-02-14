@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <section class="hero bg-primary text-light py-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center">
+            <h1 class="display-4 fw-bold">Organize Pickup Games Effortlessly</h1>
+            <p class="lead my-4">Randomize teams, ensure everyone plays, and simplify game day organization.</p>
+            <a href="{% url 'signup' %}" class="btn btn-lg btn-warning">Sign Up Free</a>
+            <a href="{% url 'about' %}" class="btn btn-lg btn-outline-light ms-2">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features py-5">
+      <div class="container">
+        <div class="row text-center mb-4">
+          <div class="col">
+            <h2>Key Features</h2>
+            <p class="lead">Simplify your pickup game organization with these powerful features.</p>
+          </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-shuffle me-2"></i> Team Randomization</h5>
+                <p class="card-text">Automatically create balanced and random teams with a single click. No more manual team selection!</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-person-check-fill me-2"></i> Player Management</h5>
+                <p class="card-text">Easily manage players, track attendance, and ensure everyone gets a chance to play.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-calendar-event-fill me-2"></i> Game Scheduling</h5>
+                <p class="card-text">Schedule games, set locations, and keep everyone informed about upcoming events.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cta" class="cta bg-light py-5">
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-8">
+            <h2>Ready to Organize Your Next Pickup Game?</h2>
+            <p class="lead mb-4">Sign up for free and start organizing your games today!</p>
+            <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">Get Started Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer bg-dark text-light py-3">
+      <div class="container text-center">
+        <p>&copy; 2023 PickupGames.com. All rights reserved.</p>
+        <p class="mb-0">
+          <a href="#" class="text-light">Terms of Service</a> | <a href="#" class="text-light">Privacy Policy</a>
+        </p>
+      </div>
+    </footer>
+  </div>
+{% endblock %}

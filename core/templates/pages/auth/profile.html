@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Profile</li>
+    </ol>
+  </nav>
+  <div class="container">
+    <style>
+      /* Custom styles for profile page - can be moved to a separate CSS file */
+      .profile-header {
+        background-color: #e9ecef; /* Light grey background */
+        padding: 2rem 0;
+        text-align: center;
+      }
+      .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover; /* Ensure image fills circular area */
+        border: 3px solid #fff; /* White border */
+        margin-bottom: 1rem;
+      }
+      .profile-section {
+        margin-top: 2rem;
+      }
+    </style>
+    <header class="profile-header">
+      <div class="container">
+        <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-image" />
+        <h1>Welcome, {{ profile.first_name }} {{ profile.last_name }}</h1>
+        <p class="lead">View your profile information and game history.</p>
+      </div>
+    </header>
+
+    <main class="container py-4">
+      <section class="profile-section" id="previous-games">
+        <h2>Previous Games Played</h2>
+        <div class="card">
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">Soccer Pickup - Community Park</h6>
+                  <small class="text-muted">July 28, 2023 - Won</small>
+                </div>
+                <span class="badge bg-success rounded-pill">Team A</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">Basketball - YMCA Court</h6>
+                  <small class="text-muted">July 21, 2023 - Lost</small>
+                </div>
+                <span class="badge bg-primary rounded-pill">Team Blue</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">Volleyball - Beach Courts</h6>
+                  <small class="text-muted">July 15, 2023 - Won</small>
+                </div>
+                <span class="badge bg-warning text-dark rounded-pill">Team Yellow</span>
+              </li>
+              <li class="list-group-item text-center">
+                <a href="#">View All Previous Games</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="profile-section" id="leagues-joined">
+        <h2>Leagues Joined</h2>
+        <div class="card">
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">Summer Soccer League 2023</h6>
+                  <small class="text-muted">Team: Strikers</small>
+                </div>
+                <span class="badge bg-info rounded-pill">Active</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">Fall Basketball League '22</h6>
+                  <small class="text-muted">Team: Ballers</small>
+                </div>
+                <span class="badge bg-secondary rounded-pill">Completed</span>
+              </li>
+              <li class="list-group-item text-center">
+                <a href="#">View All Leagues</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="profile-section" id="stats">
+        <h2>Stats Overview</h2>
+        <div class="card">
+          <div class="card-body">
+            <div class="row row-cols-1 row-cols-md-3 g-3 text-center">
+              <div class="col">
+                <div class="border p-3 rounded">
+                  <h5 class="mb-0">Games Played</h5>
+                  <p class="display-5 fw-bold mb-0">45</p>
+                </div>
+              </div>
+              <div class="col">
+                <div class="border p-3 rounded">
+                  <h5 class="mb-0">Wins</h5>
+                  <p class="display-5 fw-bold text-success mb-0">28</p>
+                </div>
+              </div>
+              <div class="col">
+                <div class="border p-3 rounded">
+                  <h5 class="mb-0">Win Rate</h5>
+                  <p class="display-5 fw-bold text-primary mb-0">62%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+{% endblock %}

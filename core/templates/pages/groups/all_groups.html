@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% block content %}
+  <style>
+    .community-header {
+      background-color: #f8f9fa; /* Light background for header */
+      padding: 2rem 0;
+      text-align: center;
+    }
+    .section-heading {
+      margin-bottom: 1.5rem;
+    }
+    .group-card,
+    .league-card {
+      border: 1px solid #dee2e6;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    .card-body {
+      padding: 1.25rem;
+    }
+    .card-title {
+      margin-bottom: 0.75rem;
+    }
+    .card-text {
+      margin-bottom: 0.5rem;
+      color: #6c757d; /* Muted text color */
+    }
+    .join-button {
+      margin-top: 1rem;
+    }
+  </style>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Groups</li>
+    </ol>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row d-flex justify-content-between align-items-center">
+          <div class="col">
+            <h1>All Groups</h1>
+          </div>
+          <div class="col text-end">
+            <a href="{% url 'create_group' %}" class="btn btn-success">Create Group</a>
+          </div>
+        </div>
+
+        <header class="community-header">
+          <div class="container">
+            <h1 class="display-4 fw-bold">Discover Public Groups & Leagues</h1>
+            <p class="lead">Find local pickup game groups and leagues to join in your community.</p>
+          </div>
+        </header>
+
+        <main class="container py-4">
+          <section id="public-groups">
+            <h2 class="section-heading">Publicly Joinable Groups</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              {% if groups %}
+                {% for group in groups %}
+                  <div class="col">
+                    <div class="group-card card h-100">
+                      <div class="card-body">
+                        <h5 class="card-title" style="font-size: 1.25rem;"><a href="{% url 'group_page' group.id %}">{{ group.name }}</a></h5>
+                        <p class="card-text">
+                          <i class="bi bi-geo-alt-fill me-1"></i> {{ group.city }}, {{ group.state }} {{ group.zip_code }}
+                        </p>
+                        <p class="card-text">
+                          <i class="bi bi-activity me-1"></i> {{ group.sport }} ({{ group.competetive_level }})
+                        </p>
+                        <p class="card-text">
+                          <i class="bi bi-people-fill me-1"></i> {{ group.get_members.count }} Members
+                        </p>
+                        <a href="{% url 'group_page' group.id %}" class="btn btn-primary join-button">Join Group</a>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </section>
+
+          {% comment %} <section id="public-leagues" class="profile-section mt-5">
+            <h2 class="section-heading">Publicly Joinable Leagues</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              <div class="col">
+                <div class="league-card card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="#">Summer Soccer League - Recreational</a></h5>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> City Sports Complex
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-activity me-1"></i> Soccer (Recreational)
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-check-fill me-1"></i> Registration Ends: Aug 15th
+                    </p>
+                    <a href="#" class="btn btn-success join-button">Register</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="league-card card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="#">Fall Basketball League - Intermediate</a></h5>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Indoor Gym - Central YMCA
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-activity me-1"></i> Basketball (Intermediate)
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-check-fill me-1"></i> Registration Ends: Sep 10th
+                    </p>
+                    <a href="#" class="btn btn-success join-button">Register</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="league-card card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="#">Competitive Volleyball League</a></h5>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Premier Volleyball Arena
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-activity me-1"></i> Volleyball (Competitive)
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-check-fill me-1"></i> Registration Open - Limited Spots
+                    </p>
+                    <a href="#" class="btn btn-success join-button">Register</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="league-card card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="#">Another League Example</a></h5>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Example Location
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-activity me-1"></i> Sport/Activity
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-check-fill me-1"></i> Registration Info
+                    </p>
+                    <a href="#" class="btn btn-success join-button">Register</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="league-card card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="#">Example League Two</a></h5>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Location Sample
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-activity me-1"></i> Different Sport
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-check-fill me-1"></i> Registration Details
+                    </p>
+                    <a href="#" class="btn btn-success join-button">Register</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="league-card card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="#">Last League Sample</a></h5>
+                    <p class="card-text">
+                      <i class="bi bi-geo-alt-fill me-1"></i> Sample Location
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-activity me-1"></i> Yet Another Sport
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-check-fill me-1"></i> Registration Time
+                    </p>
+                    <a href="#" class="btn btn-success join-button">Register</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section> {% endcomment %}
+        </main>
+
+        <footer class="footer bg-dark text-light py-3">
+          <div class="container text-center">
+            <p>&copy; 2023 PickupGames.com. All rights reserved.</p>
+            <p class="mb-0">
+              <a href="/" class="text-light">Home</a> | <a href="/about" class="text-light">About Us</a> | <a href="#" class="text-light">Terms of Service</a> | <a href="#" class="text-light">Privacy Policy</a>
+            </p>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+{% endblock %}
