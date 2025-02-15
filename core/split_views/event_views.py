@@ -9,6 +9,8 @@ from django.contrib import messages # For user feedback messages
 
 
 
+
+@authentication_wrapper
 def event_detail_view(request, group_id, event_id):
     context = initialize_context(request)
     
@@ -31,7 +33,7 @@ def event_detail_view(request, group_id, event_id):
     }
     return render(request, 'pages/events/event.html', context)
 
-
+@authentication_wrapper
 def edit_event(request, group_id, event_id):
     context = initialize_context(request)
     event = get_object_or_404(GroupScheduleEvent, pk=event_id)
@@ -55,7 +57,7 @@ def edit_event(request, group_id, event_id):
 
 
 
-
+@authentication_wrapper
 def event_rsvp(request, group_id, event_id):
     context = initialize_context(request)
     event = get_object_or_404(GroupScheduleEvent, pk=event_id)
@@ -68,7 +70,7 @@ def event_rsvp(request, group_id, event_id):
     return redirect('event_page', group_id=group_id, event_id=event_id)
 
 
-
+@authentication_wrapper
 def confirm_game_day_teams_view(request, group_id, event_id):
     event = get_object_or_404(GroupScheduleEvent, pk=event_id)
     game_setups = request.session.get('event_team_setups_' + str(event_id))
@@ -103,7 +105,7 @@ def confirm_game_day_teams_view(request, group_id, event_id):
     return redirect('event_page', event_id=event_id)
 
 
-
+@authentication_wrapper
 def get_random_teams_and_games_preview(request, group_id, event_id):
     """
         Placeholder for a ajax view that will return randomized teams and games for a pickup game day.

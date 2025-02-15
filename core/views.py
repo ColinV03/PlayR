@@ -19,6 +19,7 @@ def about(request):
     context = initialize_context(request)
     return render(request, 'pages/about.html', context)
 
+@authentication_wrapper
 def create_users(request, num_users=None):
     if num_users:
         generate_random_users(num_users=num_users)
@@ -26,7 +27,7 @@ def create_users(request, num_users=None):
         generate_random_users(num_users=10)
     return redirect('home')
 
-
+@authentication_wrapper
 def add_random_groups(request):
 
     users = UserProfile.objects.all()
@@ -45,6 +46,7 @@ def add_random_groups(request):
 
     return redirect('home')
 
+@authentication_wrapper
 def randomize_group_event_attendance(request):
     # users can only join events that belong to their group memberships
     # for each user, get all group memberships
@@ -125,7 +127,7 @@ def profile(request):
     context['profile'] = profile
     return render(request, 'pages/auth/profile.html', context)
 
-
+@authentication_wrapper
 def edit_profile(request):
     context = initialize_context(request)
     profile = UserProfile.objects.get(username=request.user)
@@ -174,7 +176,7 @@ def group_page(request, group_id):
 
     return render(request, 'pages/groups/group.html', context)
 
-
+@authentication_wrapper
 def create_group(request):
     context = initialize_context(request)
     group_form = GroupCreationForm()
@@ -200,7 +202,7 @@ def create_group(request):
 
     return render(request, 'pages/groups/create_group.html', context)
 
-
+@authentication_wrapper
 def join_group_request(request, group_id):
     context = initialize_context(request)
     group = Group.objects.get(id=group_id)
@@ -213,7 +215,7 @@ def join_group_request(request, group_id):
 
     return render(request, 'pages/groups/join_group_request.html', context)
 
-
+@authentication_wrapper
 def leave_group(request, group_id):
     context = initialize_context(request)
     group = Group.objects.get(id=group_id)
@@ -230,7 +232,7 @@ def leave_group(request, group_id):
 
 
 
-
+@authentication_wrapper
 def approve_member(request, group_id, user_id):
     context = initialize_context(request)
     group = Group.objects.get(id=group_id)
@@ -244,7 +246,7 @@ def approve_member(request, group_id, user_id):
 
     return redirect('group_page', group_id=group_id)
 
-
+@authentication_wrapper
 def remove_member(request, group_id, user_id):
     context = initialize_context(request)
     group = Group.objects.get(id=group_id)
@@ -256,6 +258,8 @@ def remove_member(request, group_id, user_id):
 
     return redirect('group_page', group_id=group_id)
 
+
+@authentication_wrapper
 def delete_group(request, group_id):
     context = initialize_context(request)
     group = Group.objects.get(id=group_id)
@@ -267,6 +271,10 @@ def delete_group(request, group_id):
 
     return render(request, 'pages/groups/delete_group.html', context)
 
+
+
+
+@authentication_wrapper
 def create_event_day(request, group_id):
 
     context = initialize_context(request)

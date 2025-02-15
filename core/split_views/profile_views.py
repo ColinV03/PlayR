@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from ..helpers import authentication_wrapper, initialize_context
 from ..models import *
 
-
+@authentication_wrapper
 def public_profile(request, username):
     context = initialize_context(request)
     user = UserProfile.objects.get(username=username)
