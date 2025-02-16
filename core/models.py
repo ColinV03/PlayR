@@ -13,14 +13,48 @@ class UserProfile(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+    def get_my_groups(self):
+        groups = GroupMembership.objects.filter(user=self, approved=True)
+        return groups
+
+    
+    def get_my_managed_groups(self):
+        groups = Group.objects.filter(organizer=self)
+        return groups
+    
 
     def public_user_groups_joined(self):
         groups = GroupMembership.objects.filter(user=self, approved=True, group__public=True)
         return groups
 
+    def get_my_group_events(self):
+        my_groups = GroupMembership.objects.filter(user=self, approved=True)
+        
+        events = []
+        for group in my_groups:
+            events += GroupScheduleEvent.objects.filter(group=group.group)
+        return events
+
+
+    def get_my_group_games(self):
+        my_groups = GroupMembership.objects.filter(user=self, approved=True)
+        
+        games = []
+        for group in my_groups:
+            games += Game.objects.filter(group=group.group)
+        return games
+    
+    def get_approval_requests_from_groups_managed(self):
+        groups_managed = Group.objects.filter(organizer=self)
+        approval_requests = GroupMembership.objects.filter(group__in=groups_managed, approved=False)
+        return approval_requests
+
+
+
 
     
-
+ 
 
 class GroupMembership(models.Model):
     group = models.ForeignKey('Group', on_delete=models.CASCADE)
@@ -31,7 +65,6 @@ class GroupMembership(models.Model):
     approved_by = models.ForeignKey(UserProfile, related_name='approved_memberships', on_delete=models.CASCADE, null=True, blank=True)
     approved_date = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return f"{self.user.username} in {self.group.name}"
@@ -85,6 +118,10 @@ class Group(models.Model):
     def get_members(self):
         group_members = GroupMembership.objects.filter(group=self, approved=True)
         return group_members
+    
+    def get_member_count(self):
+        member_count = GroupMembership.objects.filter(group=self, approved=True).count()
+        return member_count
 
     def get_scheduled_events(self):
         events = GroupScheduleEvent.objects.filter(group=self)

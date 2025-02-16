@@ -83,7 +83,31 @@
                     <h6 class="mb-0">{{ member.user.first_name }} {{ member.user.last_name }}</h6>
                     <small class="text-muted">Member Since: {{ member.approved_date|date:'M d, Y' }}</small>
                   </div>
-                  <a href="{% url 'public_profile' member.user.username %}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                  <div>
+                    <a href="{% url 'public_profile' member.user.username %}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    {% if organizer %}
+                      {% comment %}Remove Member{% endcomment %}
+                      <!-- Button trigger modal -->
+                      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeUserModal-{{ member.id }}">X</button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="removeUserModal-{{ member.id }}" tabindex="-1" aria-labelledby="removeUserModal-{{ member.id }}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="removeUserModal-{{ member.id }}Label">Remove User</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">Are you sure you want to remove {{ member.user.first_name }} {{ member.user.last_name }} from the group?</div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <a href="{% url 'remove_membership' group.id member.user.id %}" class="btn btn-outline-danger">Yes</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
                 </li>
               {% endfor %}
               <li class="player-list-item text-center">

@@ -136,7 +136,6 @@ def edit_profile(request):
     context['form'] = profile_form    
 
 
-
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, instance=profile)
         if profile_form.is_valid():
@@ -246,6 +245,8 @@ def approve_member(request, group_id, user_id):
 
     return redirect('group_page', group_id=group_id)
 
+
+
 @authentication_wrapper
 def remove_member(request, group_id, user_id):
     context = initialize_context(request)
@@ -296,4 +297,6 @@ def create_event_day(request, group_id):
             render(request, 'pages/events/event_day_form.html', context)
 
     return render(request, 'pages/events/event_day_form.html', context)
+
+
 

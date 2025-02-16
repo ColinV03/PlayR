@@ -49,8 +49,8 @@ urlpatterns = [
     path('groups/<int:group_id>/join', views.join_group_request, name='join_group'),
     path('groups/<int:group_id>/leave', views.leave_group, name='leave_group'),
 
-    # path('groups/<int:group_id>/approve/<int:membership_id>', views.approve_membership, name='approve_membership'),
-    # path('groups/<int:group_id>/remove/<int:membership_id>', views.remove_membership, name='remove_membership'),
+    path('groups/<int:group_id>/approve/<int:user_id>', views.approve_member, name='approve_membership'),
+    path('groups/<int:group_id>/remove/<int:user_id>', views.remove_member, name='remove_membership'),
 
     path('groups/<int:group_id>/delete', views.delete_group, name='delete_group'),
 

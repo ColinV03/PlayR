@@ -5,9 +5,11 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 
 class UserForm(UserCreationForm):
+    # Make first and last name appear as required: 
+
     class Meta:
         model = UserProfile
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
 
     def clean_username(self):

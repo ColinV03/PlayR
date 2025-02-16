@@ -36,6 +36,99 @@
         <p class="lead">View your profile information and game history.</p>
       </div>
     </header>
+    {% comment %}My upcoming Events:{% endcomment %}
+    {% comment %}Groups I've Joined:{% endcomment %}
+    <section class="profile-section" id="groups-joined">
+      <h2>Groups Joined</h2>
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            {% for group in profile.get_my_groups %}
+              <li class="list-group -item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">{{ group.name }}</h6>
+                  <small class="text-muted">Members: {{ group.get_member_count }}</small>
+                </div>
+                <div>
+                  <a href="{% url 'group_page' group.id %}" class="btn btn-primary">View Group</a>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {% comment %}groups I manage{% endcomment %}
+    <section class="profile-section" id="groups-managed">
+      <h2>Groups Managed</h2>
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            {% for group in profile.get_my_managed_groups %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">{{ group.name }}</h6>
+                  <small class="text-muted">Members: {{ group.get_member_count }}</small>
+                </div>
+                <div>
+                  <a href="{% url 'group_page' group.id %}" class="btn btn-primary">View Group</a>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section" id="upcoming-games">
+      <h2>Upcoming Games</h2>
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            {% for event in profile.get_my_group_events %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="badge bg-primary rounded-pill">{{ event.group }}</span>
+                  <h6 class="mb-0">{{ event.date }}</h6>
+                  <small class="text-muted">{{ event.start_time|time }} - {{ event.end_time|time }}</small>
+                </div>
+                <div>
+                  {% comment %}Slots filled / Max participants{% endcomment %}
+                  <span class="badge bg-secondary rounded-pill">{{ event.get_rsvp_count }} / {{ event.max_participants }}</span>
+
+                  <span class="badge bg-info rounded-pill">{{ event.sport }}</span>
+                  <a href="{% url 'event_page' event.group.id event.id %}" class="btn btn-primary">View Event</a>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {% comment %}Make a section for approving Group Memberships for managed Groups{% endcomment %}
+    <section class="profile-section" id="group-memberships">
+      <h2>Group Membership Requests</h2>
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            {% for group_request in profile.get_approval_requests_from_groups_managed %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">{{ group_request.user.first_name }} {{ group_request.user.last_name }} - {{ group_request.group }}</h6>
+                  <small class="text-muted">Requested by: {{ group_request.user.username }} - {{ group_request.created_at }}</small>
+                </div>
+                <div>
+                  <a href="{% url 'approve_membership' group_request.group.id group_request.user.id %}" class="btn btn-success">Approve</a>
+                  {% comment %} <a href="{% url 'reject_group_membership' group_request.id %}" class="btn btn-danger">Reject</a> {% endcomment %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
 
     <main class="container py-4">
       <section class="profile-section" id="previous-games">
