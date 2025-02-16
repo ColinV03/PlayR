@@ -36,7 +36,7 @@ urlpatterns = [
     path('account/signup', views.signup, name='signup'),
     path('account/login', views.login_view, name='login'),
     path('account/logout', views.logout_view, name='logout'),
-
+    path('account/notifications/read', views.mark_all_notifications_read, name='mark_all_notifications_read'),
 
     path('profiles/<str:username>', profile_views.public_profile, name='public_profile'),
 
@@ -61,9 +61,16 @@ urlpatterns = [
     
     path('groups/<int:group_id>/events/<int:event_id>/rsvp', event_views.event_rsvp, name='event_rsvp'),
 
+    path('groups/<int:group_id>/events/<int:event_id>/add_comment', event_views.add_event_comment, name='add_event_comment'),
+
+
+
 
     path('groups/<int:group_id>/events/<int:event_id>/generate_game_day_teams', event_views.get_random_teams_and_games_preview, name='get_random_teams_and_games_preview'),
     path('groups/<int:group_id>/events/<int:event_id>/start_game_day_teams', event_views.confirm_game_day_teams_view, name='confirm_game_day_teams_view'),
+
+
+
 
 
 

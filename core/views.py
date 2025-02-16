@@ -146,7 +146,16 @@ def edit_profile(request):
 
     return render(request, 'pages/auth/edit_profile.html', context)
     
-
+@authentication_wrapper
+def mark_all_notifications_read(request):
+    print("Marking all notifications read")
+    context = initialize_context(request)
+    notifications = UserNotifications.objects.filter(user=request.user)
+    for notification in notifications:
+        print(f"Marking notification {notification.id} as read")
+        notification.is_read = True
+        notification.save()
+    return redirect('profile')
 
 
 @authentication_wrapper

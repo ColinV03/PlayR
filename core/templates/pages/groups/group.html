@@ -131,8 +131,8 @@
         </div>
 
         <div class="row row-cols-1 row-cols-md-2 g-4">
-          {% if group.get_scheduled_events %}
-            {% for event in group.get_scheduled_events %}
+          {% if group.get_upcoming_schedule_events %}
+            {% for event in group.get_upcoming_schedule_events %}
               <div class="col">
                 <div class="game-card card">
                   <div class="card-body">
@@ -209,7 +209,7 @@
                     {% else %}
                       <span class="badge bg-danger game-status-badge">Cancelled</span>
                     {% endif %}
-                    <a href="#" class="btn btn-sm btn-outline-secondary ms-2">Game Details</a>
+                    <a href="{% url 'event_page' event.group.id event.id %}" class="btn btn-sm btn-outline-secondary ms-2">Game Details</a>
                   </div>
                 </div>
               </div>

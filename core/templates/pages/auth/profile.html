@@ -36,21 +36,52 @@
         <p class="lead">View your profile information and game history.</p>
       </div>
     </header>
-    {% comment %}My upcoming Events:{% endcomment %}
-    {% comment %}Groups I've Joined:{% endcomment %}
+    {% comment %}notifications modal{% endcomment %}
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#notificationsModal">Notifications</button>
+
+    <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="notificationsModalLabel">Notifications</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>View all your notifications here.</p>
+            <a href="{% url 'mark_all_notifications_read' %}" class="btn btn-primary">Mark All as Read</a>
+            <ul class="list-group list-group-flush">
+              {% for notification in profile.get_all_notifications %}
+                {% if notificaton.is_read %}
+                  <li class="list-group-item">{{ notification.message }}</li>
+                {% else %}
+                  <li class="list-group-item">
+                    <span class="badge bg-danger rounded-pill">New</span>
+                    {{ notification.message }}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <section class="profile-section" id="groups-joined">
       <h2>Groups Joined</h2>
       <div class="card">
         <div class="card-body">
           <ul class="list-group list-group-flush">
-            {% for group in profile.get_my_groups %}
-              <li class="list-group -item d-flex justify-content-between align-items-center">
+            {% for membership in profile.get_my_groups %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                  <h6 class="mb-0">{{ group.name }}</h6>
-                  <small class="text-muted">Members: {{ group.get_member_count }}</small>
+                  <h6 class="mb-0">{{ membership.group.name }}</h6>
+                  <small class="text-muted">Members: {{ membership.group.get_member_count }}</small>
                 </div>
                 <div>
-                  <a href="{% url 'group_page' group.id %}" class="btn btn-primary">View Group</a>
+                  <a href="{% url 'group_page' membership.group.id %}" class="btn btn-primary">View Group</a>
                 </div>
               </li>
             {% endfor %}

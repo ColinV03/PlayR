@@ -49,10 +49,33 @@ class UserProfile(AbstractUser):
         groups_managed = Group.objects.filter(organizer=self)
         approval_requests = GroupMembership.objects.filter(group__in=groups_managed, approved=False)
         return approval_requests
+    
+    def get_all_notifications(self):
+        notifications = UserNotifications.objects.filter(user=self)
+        return notifications
+    
+    def get_unread_notifications(self):
+        notifications = UserNotifications.objects.filter(user=self, is_read=False)
+        return notifications
+    
+    
 
 
 
+class UserNotifications(models.Model):
+    
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='notifications')
+    message = models.CharField(max_length=255)  # The notification text
+    related_object_type = models.CharField(max_length=255, blank=True, null=True) # e.g., 'Product', 'Order'
+    related_object_id = models.PositiveIntegerField(blank=True, null=True) # The ID of the related object
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['-created_at'] # Show newest notifications first
+
+    def __str__(self):
+        return self.message
     
  
 
@@ -125,6 +148,12 @@ class Group(models.Model):
 
     def get_scheduled_events(self):
         events = GroupScheduleEvent.objects.filter(group=self)
+        return events
+    
+
+    def get_upcoming_schedule_events(self):
+        today = datetime.date.today()
+        events = GroupScheduleEvent.objects.filter(group=self, date__gte=today)
         return events
     
 
@@ -265,3 +294,4 @@ class TeamAssignment(models.Model):
 
 
     
+

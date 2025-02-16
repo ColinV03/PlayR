@@ -157,3 +157,14 @@ class GroupEventAttendanceForm(forms.ModelForm):
         labels = {
             'attending': 'Will you be attending this event?',
         }
+
+class GroupEventCommentForm(forms.ModelForm):
+    class Meta:
+        model = GroupEventComments
+        fields = ['comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={'rows': 2}),
+        }
+        labels = {
+            'comment': 'Add a comment',
+        }

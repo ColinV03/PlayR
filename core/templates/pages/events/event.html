@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load number_formats %}
+{% load date_formats %}
 {% block content %}
   <style>
     .event-header {
@@ -115,42 +116,26 @@
       <div class="card">
         <div class="card-body">
           <div class="mb-3">
-            <textarea class="form-control" rows="3" placeholder="Add your comment..."></textarea>
-            <button type="button" class="btn btn-primary mt-2">Post Comment</button>
+            <form action="{% url 'add_event_comment' event.group.id event.id %}" method="post">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="comment" class="form-label">Add a Comment</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
           </div>
           <ul class="list-unstyled">
             {% for comment in comments %}
               <li class="mb-3">
                 <div class="d-flex">
                   <div>
-                    <h6 class="mb-0">{{ comment.user.first_name }} {{ comment.user.last_name }} <small class="text-muted ms-2">{{ comment.created_at }}</small></h6>
+                    <h6 class="mb-0">{{ comment.user.first_name }} {{ comment.user.last_name }} <small class="text-muted ms-2">{{ comment.created_at|timesince_date }}</small></h6>
                     <p class="mb-0">{{ comment.comment }}</p>
                   </div>
                 </div>
               </li>
             {% endfor %}
-
-            <li class="mb-3">
-              <div class="d-flex">
-                <img src="https://via.placeholder.com/30x30" alt="Profile Pic" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" />
-                <div>
-                  <h6 class="mb-0">Samantha Lee <small class="text-muted ms-2">2 hours ago</small></h6>
-                  <p class="mb-0">Looking forward to this game! Is it still happening if it rains?</p>
-                </div>
-              </div>
-            </li>
-            <li class="mb-3">
-              <div class="d-flex">
-                <img src="https://via.placeholder.com/30x30" alt="Profile Pic" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" />
-                <div>
-                  <h6 class="mb-0">Organizer Name <small class="text-muted ms-2">1 hour ago</small></h6>
-                  <p class="mb-0">@Samantha Lee: We'll make a call closer to game time depending on the forecast. Keep an eye on updates here!</p>
-                </div>
-              </div>
-            </li>
-            <li class="text-center">
-              <a href="#">View All Comments</a>
-            </li>
           </ul>
         </div>
       </div>

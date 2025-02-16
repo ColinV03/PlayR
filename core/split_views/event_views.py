@@ -23,6 +23,8 @@ def event_detail_view(request, group_id, event_id):
         user_attendance = GroupEventAttendance.objects.filter(event=event, user=request.user).first()
         users_attending_status = user_attendance.attending if user_attendance else False
         
+    comment_form = GroupEventCommentForm()
+
 
     context = {
         'event': event,
@@ -30,8 +32,32 @@ def event_detail_view(request, group_id, event_id):
         'attendee_count': attendees.count(),
         'comments': comments,
         'users_attending_status': users_attending_status,
+        'comment_form': comment_form,
     }
     return render(request, 'pages/events/event.html', context)
+
+@authentication_wrapper
+def add_event_comment(request, group_id, event_id):
+    event = get_object_or_404(GroupScheduleEvent, pk=event_id)
+    user = request.user
+
+    if request.method == 'POST':
+        form = GroupEventCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.event = event
+            comment.user = user
+            comment.save()
+            # Redirect to event page with success message
+            # messages.success(request, "Comment added successfully.")
+            redirect('event_page', group_id=group_id, event_id=event_id)
+        else:
+            messages.error(request, "Error adding comment.")
+    return redirect('event_page', group_id=group_id, event_id=event_id)
+
+
+
+
 
 @authentication_wrapper
 def edit_event(request, group_id, event_id):
