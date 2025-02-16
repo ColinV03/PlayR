@@ -1,8 +1,22 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import random
+import string
 
 # Create your models here.
+
+
+
+# Generate random room code 6 characters long
+# def generate_room_code():
+#     while True:
+#         code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        
+#         if Room.objects.filter(room_code=code).count() == 0:
+#             break
+#     return code
+
 
 
 #  Default UserProfile model: 
@@ -58,7 +72,7 @@ class UserProfile(AbstractUser):
         notifications = UserNotifications.objects.filter(user=self, is_read=False)
         return notifications
     
-    
+
 
 
 
@@ -290,8 +304,38 @@ class TeamAssignment(models.Model):
 
 
 
+# Build a Room where non-authenticated members can join to be randomly assigned to a group
+# 
+# class Room(models.Model):
+    # name = models.CharField(max_length=200)
+    # room_code = models.CharField(max_length=6, default=generate_room_code, editable=False)
+    # organizer = models.ForeignKey(UserProfile, related_name='organized_rooms', on_delete=models.CASCADE)
+# 
+    # allow_guests = models.BooleanField(default=True)
+    # public = models.BooleanField(default=True)
+# 
+    # ready_to_start = models.BooleanField(default=False)
+    # 
+    # created_at = models.DateTimeField(auto_now_add=True)
+# 
+    # def __str__(self):
+        # return f"{self.name} in {self.organizer.username}"
+    # 
+    # def get_members(self):
+        # return None
+# 
+# 
+    # 
+# class AnonymousMembers(models.Model):
+    # room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    # first_name = models.CharField(max_length=200)
+    # last_name = models.CharField(max_length=200)
+    # games_played = models.IntegerField(default=0)
+    # 
+# 
+    # created_at = models.DateTimeField(auto_now_add=True)
+# 
+    # def __str__(self):
+        # return f"{self.user.username} in {self.room.name} room"
 
-
-
-    
 

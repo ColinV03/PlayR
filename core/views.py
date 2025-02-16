@@ -1,3 +1,4 @@
+from django.contrib import messages
 import random
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -216,12 +217,14 @@ def join_group_request(request, group_id):
     group = Group.objects.get(id=group_id)
     context['group'] = group
 
-    if request.method == 'POST':
-        membership = GroupMembership(group=group, user=request.user)
-        membership.save()
-        return redirect('group_page', group_id=group_id)
+    membership = GroupMembership(group=group, user=request.user)
+    membership.save()
 
-    return render(request, 'pages/groups/join_group_request.html', context)
+    messages.success(request, "Request to join group sent.")
+
+
+
+    return redirect('group_page', group_id=group_id)
 
 @authentication_wrapper
 def leave_group(request, group_id):
@@ -309,3 +312,11 @@ def create_event_day(request, group_id):
 
 
 
+
+
+
+# Play view for starting rooms
+# @authentication_wrapper
+# def gameday(request):
+#     context = initialize_context(request)
+#     return render(request, 'pages/play.html', context)

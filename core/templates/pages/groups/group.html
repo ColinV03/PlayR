@@ -50,7 +50,9 @@
         <h1 class="display-4 fw-bold">{{ group.name }}</h1>
         <p class="lead">Location: {{ group.city }} {{ group.state }} | Sport: {{ group.sport }} | Level: {{ group.competetive_level }}</p>
         {% if not is_member %}
-          <button class="btn btn-primary btn-lg">Request to Join Group</button>
+          <a href="{% url 'join_group' group.id %}" class="btn btn-primary btn-lg">Request to Join Group</a>
+        {% else %}
+          <a href="{% url 'leave_group' group.id %}" class="btn btn-danger btn-lg">Leave Group</a>
         {% endif %}
       </div>
     </header>

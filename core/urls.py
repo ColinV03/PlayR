@@ -71,6 +71,7 @@ urlpatterns = [
 
 
 
+    # path('gameday/' , views.gameday, name='gameday'),
 
 
 
